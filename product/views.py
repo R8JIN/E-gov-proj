@@ -5,7 +5,7 @@ from Bidding.models import Bid
 
 
 def home(request):
-    products = Product.objects.all().order_by('category', '-datetime')
+    products = Product.objects.all().order_by('category','-datetime')
     category = Category.objects.all()
     print(products)
     content = {'products': products, 'category': category}
@@ -18,31 +18,34 @@ def home(request):
 
 def bid_so_far(request, id):
     bid = Bid.objects.filter(product__id=id).order_by('-datetime')
-    return render(request, 'Sell.html', {'bid':bid})
+    return render(request, 'BidSofar.html', {'bid': bid})
 
 def product_detail(request, id):
     product = Product.objects.get(id=id)
     bid = Bid.objects.filter(product__id=id).order_by('-datetime')
-    b = bid.last()
+    b = bid.first()
+    print(b.bid_amt)
     ctime = product.remaining_time_in_minutes()
     return render(request, 'Product.html', {'product': product, 'ctime': ctime, 'bid': bid, 'b': b})
 
-# def sell(request):
-#     if request.method == 'POST':
-#         title = request.POST[]
-#         category = request.POST[]
-#         price = request.POST[]
-#         description = request.POST[]
-#         thumbnails = request.POST[]
-#         images = request.POST[]
 
-#         counter = request.POST[]
+def sell(request):
+    category = Category.objects.all()
+    # if request.method == 'POST':
+    #     title = request.POST[]
+    #     category = request.POST[]
+    #     price = request.POST[]
+    #     description = request.POST[]
+    #     thumbnails = request.POST[]
+    #     images = request.POST[]
+    #
+    #     counter = request.POST[]
+    #
+    #     product = Product(title=title, category=Category.objects.get(title=category)
+    #                       , price=price, description=description, thumbNails=thumbnails
+    #                       ,images = images, duration_in_minutes=counter, state=Product.STATE.RUNNING)
+    #     product.save()
+    #
+    #     return redirect('Home')
 #
-#         product = Product(title=title, category=Category.objects.get(title=category)
-#                           , price=price, description=description, thumbNails=thumbnails
-#                           ,images = images, duration_in_minutes=counter, state=Product.STATE.RUNNING)
-#         product.save()
-#
-#         return redirect('Home')
-#
-#     return render(request, 'Sell.html', {})
+    return render(request, 'Sell.html', {'category': category})

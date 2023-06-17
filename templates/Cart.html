@@ -12,13 +12,13 @@
     {% for p in product %}
     <div class="col-sm-3">
               <div class="card shadow-sm">
-                    <img class="card-img-top" src="media/{{p.product.thumbNails}}" style="{height:75%;}">
+                    <img class="card-img-top" src="media/{{p.product.images}}" style="{height:75%;}">
                 <div class="card-body">
                   <p class="card-text">{{p.product.title}}</p>
                   <blockquote class="card-text">Rs.{{p.product.price}}</blockquote>
                   <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-group">
-                      <button type="button" class="btn btn-sm btn-outline-secondary"><a href="#" class="text-decoration-none">Buy</a></button>
+                      <button type="button" class="btn btn-sm btn-outline-secondary"><a href="{% url 'payment' id=p.product.id %}" class="text-decoration-none">Buy</a></button>
 <!--                      <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>-->
                     </div>
                     <small class="text-body-secondary">{{p.product.datetime.date}}</small>

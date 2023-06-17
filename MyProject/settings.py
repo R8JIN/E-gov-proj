@@ -25,6 +25,8 @@ SECRET_KEY = 'django-insecure-@a2h@he3zgoxct%r^rz=%54e$bqw#23w3!x=m72itr!mnr&5g9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+if os.getcwd() == '/app':
+    DEBUG = False
 ALLOWED_HOSTS = []
 
 
@@ -41,6 +43,7 @@ INSTALLED_APPS = [
     'Account',
     'Bidding',
     'countdowntimer_model',
+    'paypalrestsdk'
 
 ]
 
@@ -127,3 +130,9 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+PAYPAL_MODE = "sandbox"  # Set to "live" for production
+PAYPAL_CLIENT_ID = "AScLb1qajvDplpJzAShOwOdWTtZLOBRsbkG_78ZFEYokB4UWCnsMkHNP4o4aTAoHI382gGU_9Wu0bEqQ"
+PAYPAL_CLIENT_SECRET = "ENq2SsXW-EDmIsa5CjqjlMGbht1qh157-6y2xaxevVwlOYqDiJlFc1nFq7e2MWomgESujIA-zxUrUY1b"
+
+

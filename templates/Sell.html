@@ -1,24 +1,47 @@
 {% extends 'base.html' %}
 
 {% block content %}
-            <table class="table">
-                <thead class="thead-dark">
-                    <tr>
-                      <th scope="col">SN</th>
-                      <th scope="col">Bidder's Username</th>
-                      <th scope="col">Bid Amount</th>
-                      <th scope="col">Time</th>
-                    </tr>
-                 </thead>
-            <tbody>
-                {% for b in bid %}
-                <tr>
-                  <th scope="row">{{forloop.counter}}</th>
-                  <td>{{b.user.username}}</td>
-                  <td>{{b.bid_amt}}</td>
-                  <td>{{b.datetime.time}}</td>
-                </tr>
+<h3 class="text-center my-4">Sell an Item</h3>
+
+<div class="container mt-4">
+<form method="post" action="{% url 'sell' %}">
+    {% csrf_token %}
+    <div class="form-group" align="center">
+        <div class="w-25 mx-2 my-2">
+        <label for="title">Title</label>
+        <input type="text" class="form-control" id="title" name="title" aria-describedby="emailHelp" >
+        <small id="emailHelp" class="form-text text-muted">Name of the product</small>
+        </div>
+         <div class="w-25 mx-2 my-2">
+            <label class="mr-sm-2" for="inlineFormCustomSelect">Category of item</label>
+            <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+            <option selected>Choose...</option>
+                {% for c in category %}
+            <option value="{{c.id}}">{{c.title}}</option>
+
                 {% endfor %}
-            </tbody>
-            </table>
+            </select>
+    </div>
+    <div class="w-25 mx-2 my-2">
+        <label for="price">Price</label>
+        <input type="number" class="form-control" id="price">
+    </div>
+    <div class="w-50 mx-2 my-2">
+        <label for="exampleFormControlTextarea1">Description</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="10"></textarea>
+        <small id="" class="form-text text-muted">Provide proper description about the item you are selling</small>
+    </div>
+
+    <div class="w-25 mx-2 my-2">
+        <label for="thumbnail"></label>
+        <input type="image"  name="thumb" id="thumbnail"  width="48" height="48">
+    </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+
+
+</form>
+</div>
+
+
 {% endblock %}
