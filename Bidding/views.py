@@ -1,12 +1,80 @@
-from django.shortcuts import render, redirect
+import paypalrestsdk
+from django.shortcuts import render, redirect, HttpResponse
 from product.models import Product
-from .models import WatchList, Bid, Cart
+from .models import WatchList, Bid, Cart, Order
 from django.contrib import messages
+from paypalrestsdk import Payment
 # Create your views here.
+from django.conf import settings
+
+def create_payment(request, id):
+    paypalrestsdk.configure(
+        mode=settings.PAYPAL_MODE,
+        client_id=settings.PAYPAL_CLIENT_ID,
+        client_secret=settings.PAYPAL_CLIENT_SECRET
+    )
+
+    product = Product.objects.get(id=id)
+    order = Order.objects.filter(product__id=id)
+    if not order:
+        order = Order(user=request.user, product=product, address=request.user.address,
+                      mobile=request.user.mobile, price=product.final_price)
+        # order.save()
+    # Get the amount and recipient email from the form or request data  # Assuming you have a form field for the recipient's email
+
+        payment = Payment({
+            'intent': 'sale',
+            'payer': {
+                'payment_method': 'paypal'
+            },
+            'redirect_urls': {
+                'return_url': 'http://127.0.0.1:8000/biddingpayment/execute/',
+                'cancel_url': 'http://localhost:8000/payment/cancel/'
+            },
+            'transactions': [{
+                'amount': {
+                    'total': product.final_price,
+                    'currency': 'USD'
+                },
+                'payee': {
+                    'email': 'rojin1234@gmail.com'
+                }
+            }]
+        })
+
+        if payment.create():
+            for link in payment.links:
+                if link.rel == 'approval_url':
+                    redirect_url = link.href
+                    order.save()
+                    return redirect(redirect_url)
+        else:
+            return render(request, 'payment_failed.html')
+    else:
+        messages.warning(request,"You've already order")
+        return redirect('/')
+
+
+def execute_payment(request):
+    payer_id = request.GET.get('PayerID')
+    payment_id = request.GET.get('paymentId')
+
+
+    paypalrestsdk.configure(
+        mode=settings.PAYPAL_MODE,
+        client_id=settings.PAYPAL_CLIENT_ID,
+        client_secret=settings.PAYPAL_CLIENT_SECRET
+    )
+    payment = Payment.find(payment_id)
+
+    if payment.execute({"payer_id": payer_id}):
+        return render(request, 'payment_success.html', {})
+    else:
+        return HttpResponse("Payment failed")
 
 
 def watchlist(request):
-    product = WatchList.objects.all()
+    product = WatchList.objects.filter(user=request.user).order_by('-datetime')
     return render(request, 'WatchList.html', {'product': product})
 
 
@@ -21,6 +89,13 @@ def add_to_watchlist(request, id):
 
     return redirect('Home')
 
+
+def remove_from_watchlist(request, id):
+    product = WatchList.objects.get(id=id)
+
+    product.delete()
+    messages.warning(request, 'Removed from the watchlist')
+    return redirect('watchlist')
 
 def add_bid(request, id):
     product = Product.objects.get(id=id)
@@ -46,6 +121,7 @@ def add_bid(request, id):
 
 
 def cart(request):
+    add_cart()
     product = Cart.objects.filter(user=request.user)
     return render(request, 'Cart.html', {'product': product})
 
@@ -61,13 +137,15 @@ def add_cart():
             # print(bid)
             if bid:
                 bid = bid.last()
+                p.final_price = bid.bid_amt;
+                p.save()
                 print(bid.product.id)
                 cart = Cart.objects.filter(user=bid.user).filter(product__id=bid.product.id)
                 if not cart:
                     cart = Cart(user=bid.user, product=Product.objects.get(id=bid.product.id))
                     cart.save()
 
-add_cart()
+
 
 
 

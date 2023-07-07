@@ -18,8 +18,9 @@
                   <blockquote class="card-text">Rs.{{p.product.price}}</blockquote>
                   <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-group">
-                      <button type="button" class="btn btn-sm btn-outline-secondary"><a href="{% url 'Prod_view' id=p.id %}">View</a></button>
+                      <button type="button" class="btn btn-sm btn-primary"><a href="{% url 'Prod_view' id=p.id %}" class="text-decoration-none text-reset">View</a></button>
 <!--                      <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>-->
+                        <button type="button" class="btn btn-sm btn-outline-secondary"><a href="{% url 'remove' id=p.id %}" class="text-decoration-none text-warning">Remove</a></button>
                     </div>
                     <small class="text-body-secondary">{{p.product.datetime.date}}</small>
                   </div>

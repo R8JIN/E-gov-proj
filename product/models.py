@@ -22,6 +22,7 @@ class Product(CountdownTimer, models.Model):
     thumbNails = models.ImageField()
     images = models.FileField()
     datetime = models.DateTimeField(default=datetime.now, blank=True)
+    final_price = models.FloatField(null=True, blank=True)
 
     def __str__(self):
        return self.title

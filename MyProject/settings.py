@@ -127,3 +127,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+PAYPAL_MODE = "sandbox"   # sandbox or live
+PAYPAL_CLIENT_ID = "AScLb1qajvDplpJzAShOwOdWTtZLOBRsbkG_78ZFEYokB4UWCnsMkHNP4o4aTAoHI382gGU_9Wu0bEqQ" # https://developer.paypal.com/docs/integration/admin/manage-apps/
+PAYPAL_CLIENT_SECRET= "ENq2SsXW-EDmIsa5CjqjlMGbht1qh157-6y2xaxevVwlOYqDiJlFc1nFq7e2MWomgESujIA-zxUrUY1b"

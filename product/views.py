@@ -18,13 +18,13 @@ def home(request):
 
 def bid_so_far(request, id):
     bid = Bid.objects.filter(product__id=id).order_by('-datetime')
-    return render(request, 'Sell.html', {'bid':bid})
+    return render(request, 'Bidsofar.html', {'bid': bid})
 
 
 def product_detail(request, id):
     product = Product.objects.get(id=id)
     bid = Bid.objects.filter(product__id=id).order_by('-datetime')
-    b = bid.last()
+    b = bid.first()
     ctime = product.remaining_time_in_minutes()
     return render(request, 'Product.html', {'product': product, 'ctime': ctime, 'bid': bid, 'b': b})
 

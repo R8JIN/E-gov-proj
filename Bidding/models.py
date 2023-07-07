@@ -8,6 +8,7 @@ from datetime import datetime
 class WatchList(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    datetime = models.DateTimeField(default=datetime.now, blank=True)
 
 
 class Bid(models.Model):
@@ -16,6 +17,9 @@ class Bid(models.Model):
     bid_amt = models.FloatField()
     datetime = models.DateTimeField(default=datetime.now, blank=True)
 
+    # class META:
+    #     def verbose_name(self):
+    #         return
 
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
