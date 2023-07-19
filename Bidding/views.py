@@ -154,23 +154,27 @@ def cart(request):
     return render(request, 'Cart.html', {'product': product, 'order': order})
 
 
+
 def add_cart():
     products = Product.objects.all()
     for p in products:
         ctime = p.remaining_time_in_minutes()
         if ctime == 0:
-            bid = Bid.objects.filter(product__id=p.id).order_by('bid_amt').reverse()
-            # print(bid)
+            bid = Bid.objects.filter(product__id=p.id).order_by('bid_amt')
             if bid:
-                bid = bid.first()
-                print(bid.bid_amt)
+                bid = bid.last()
+                b = Bid.objects.filter(product__id=p.id, bid_amt=bid.bid_amt)
+                if b.count() > 1:
+                    bid_price = b.order_by("datetime");
+                    bid = bid_price.first()
                 p.final_price = bid.bid_amt;
                 p.save()
                 print(bid.product.id)
-                c = Cart.objects.filter(user=bid.user).filter(product__id=bid.product.id)
-                if not c:
-                    c = Cart(user=bid.user, product=Product.objects.get(id=bid.product.id))
-                    c.save()
+                cart = Cart.objects.filter(user=bid.user).filter(product__id=bid.product.id)
+                if not cart:
+                    cart = Cart(user=bid.user, product=Product.objects.get(id=bid.product.id))
+                    cart.save()
+
 
 
 #deposite ko lagi
